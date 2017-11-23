@@ -32,7 +32,7 @@
                                 <items>
                                     <navigationItem title="TokenGames" id="tcK-iY-DNi">
                                         <barButtonItem key="rightBarButtonItem" style="plain" id="VMq-1F-NSo">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bhO-qM-Poa">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bhO-qM-Poa">
                                                 <rect key="frame" x="325" y="7" width="34" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Sort ">
@@ -47,7 +47,7 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="170" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NsF-sg-DU0">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="120" width="375" height="547"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="gameCell" rowHeight="170" id="i59-XQ-wdn" customClass="GameCell" customModule="TokenGames" customModuleProvider="target">
@@ -111,25 +111,32 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="mNa-5r-syt"/>
                                 </connections>
                             </tableView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="USj-7v-PO2">
+                                <rect key="frame" x="0.0" y="64" width="375" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="NsF-sg-DU0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="0mi-OA-slk"/>
-                            <constraint firstItem="NsF-sg-DU0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Aol-pH-Qz0"/>
+                            <constraint firstItem="NsF-sg-DU0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2eN-Sq-k7m"/>
                             <constraint firstItem="yZS-TM-TAW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="At1-kz-dWY"/>
-                            <constraint firstItem="NsF-sg-DU0" firstAttribute="top" secondItem="3Po-d0-0KB" secondAttribute="bottom" id="DiI-QR-Fvs"/>
-                            <constraint firstItem="NsF-sg-DU0" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="HTZ-0N-37n"/>
+                            <constraint firstItem="USj-7v-PO2" firstAttribute="top" secondItem="3Po-d0-0KB" secondAttribute="bottom" id="Wxj-nE-HeO"/>
+                            <constraint firstItem="NsF-sg-DU0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="XkC-Wq-hBc"/>
+                            <constraint firstItem="NsF-sg-DU0" firstAttribute="top" secondItem="USj-7v-PO2" secondAttribute="bottom" id="ZQc-xf-WmM"/>
+                            <constraint firstItem="USj-7v-PO2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="eJA-VC-7i0"/>
                             <constraint firstItem="3Po-d0-0KB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="kS0-8Q-6JA"/>
                             <constraint firstItem="3Po-d0-0KB" firstAttribute="top" secondItem="yZS-TM-TAW" secondAttribute="bottom" id="nGT-68-CwN"/>
+                            <constraint firstItem="NsF-sg-DU0" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="nXl-Et-WMJ"/>
+                            <constraint firstItem="USj-7v-PO2" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="pJG-hf-KyH"/>
                             <constraint firstItem="3Po-d0-0KB" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="rlJ-ur-HxQ"/>
                             <constraint firstItem="yZS-TM-TAW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="sV7-VB-OsU"/>
                             <constraint firstAttribute="trailing" secondItem="yZS-TM-TAW" secondAttribute="trailing" id="wuG-pX-Xgf"/>
-                            <constraint firstItem="NsF-sg-DU0" firstAttribute="top" secondItem="3Po-d0-0KB" secondAttribute="bottom" id="zQ3-Gx-cgR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="buttonSort" destination="VMq-1F-NSo" id="NcL-Mq-Shp"/>
+                        <outlet property="searchBar" destination="USj-7v-PO2" id="Nwm-hA-wfP"/>
                         <outlet property="tableview" destination="NsF-sg-DU0" id="hmC-tA-UmE"/>
                     </connections>
                 </viewController>

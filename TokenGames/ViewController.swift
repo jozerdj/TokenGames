@@ -8,21 +8,29 @@
 
 import UIKit
 
+enum selectedScope:Int {
+    case name = 0
+    case release = 1
+    case platform = 2
+}
+
 var imageCache = [String: UIImage]()
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
-    //UI Declarations
+    //MARK: UI Declarations:
     @IBOutlet var tableview: UITableView!
     @IBOutlet var buttonSort: UIBarButtonItem!
+    @IBOutlet var searchBar: UISearchBar!
     
     
-    //Declarations
+    //MARK: Declarations:
+    var initialGames: [Game]? = []
     var games: [Game]? = []
     var refresher: UIRefreshControl!
     var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
-    //Start View:
+    //MARK: Start View:
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +42,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         
+        //SearchBar:
+        self.searchBarSetup()
         
         //Pull to refresh:
         refresher = UIRefreshControl()
@@ -48,13 +58,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     
-    //Memory Warning:
+    //MARK: Memory Warning:
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
     
-    //Fetch Games data from JSON:
+    //MARK: Fetch Games data from JSON file:
     @objc func fetchGames(){
         let urlRequest = URLRequest(url: URL(string: "https://dl.dropboxusercontent.com/s/1b7jlwii7jfvuh0/games")!)
         
@@ -67,7 +77,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.games = [Game]()
             do{
                 let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [String : AnyObject]
-                
+                self.initialGames = []
                 if let gamesFromJson = json["games"] as? [[String : AnyObject]] {
                     for gameInJson in gamesFromJson {
                         let game = Game()
@@ -79,10 +89,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             game.urlImage = urlImage
                             game.urlVideo = urlVideo
                         }
-                        self.games?.append(game)
+                        self.initialGames?.append(game)
+                        
+                        self.games = self.initialGames
                     }
                 }
                 DispatchQueue.main.async{
+                    self.searchBar.text = "";
                     self.tableview.reloadData()
                     self.refresher.endRefreshing()                          //End Refresher
                     self.activityIndicator.stopAnimating()                  //End Activity Indicator
@@ -95,7 +108,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         task.resume()
     }
     
-    //Button(Menu):
+    //MARK: Button(Menu):
     let menuManager = MenuManager()
     @IBAction func sortPressed(_ sender: UIButton) {
         menuManager.openMenu()
@@ -103,7 +116,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    //Sort Data:
+    //MARK: Search Bar:
+    func searchBarSetup() {
+        searchBar.showsScopeBar = true
+        searchBar.scopeButtonTitles = ["Name","Release Year","Platform"]
+        searchBar.selectedScopeButtonIndex = 0
+        searchBar.delegate = self
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            games = initialGames
+            DispatchQueue.main.async{
+                self.tableview.reloadData()
+            }
+        }else {
+            filterTableView(ind: searchBar.selectedScopeButtonIndex, text: searchText)
+        }
+    }
+    
+    func filterTableView(ind:Int,text:String) {
+        switch ind {
+        case selectedScope.name.rawValue:
+            //fix of not searching when backspacing
+            games = initialGames?.filter({ (game:Game) -> Bool in
+                return (game.title?.lowercased().contains(text.lowercased()))!
+            })
+            DispatchQueue.main.async{
+                self.tableview.reloadData()
+            }
+        case selectedScope.release.rawValue:
+            //fix of not searching when backspacing
+            games = initialGames?.filter({ (game:Game) -> Bool in
+                return (game.releaseDate?.lowercased().contains(text.lowercased()))!
+            })
+            DispatchQueue.main.async{
+                self.tableview.reloadData()
+            }
+        case selectedScope.platform.rawValue:
+            //fix of not searching when backspacing
+            games = initialGames?.filter({ (game:Game) -> Bool in
+                return (game.platform?.joined(separator: ", ").lowercased().contains(text.lowercased()))!
+            })
+            DispatchQueue.main.async{
+                self.tableview.reloadData()
+            }
+        default:
+            print("no type")
+        }
+    }
+    
+    
+    //MARK: Sort Data:
     func sortByNameAZ(){
         let sorted = (self.games?.sorted(by: {$0.title! < $1.title!}))!
         
@@ -151,7 +215,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    //TableView Display and Action:
+    //MARK: TableView Display and Action:
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "gameCell", for: indexPath) as! GameCell
         
@@ -188,7 +252,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 
 extension UIImageView{
-    //Download image data:
+    //MARK: Download image data:
     func downloadImage(from url: String){
         let urlRequest = URLRequest(url: URL(string: url)!)
         
